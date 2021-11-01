@@ -12,6 +12,7 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
   options?: {
     value: number
   }[]
+  onChangeValue?: (value: number) => void
 }
 
 let kName = 0;
@@ -25,6 +26,7 @@ export const InputCurrency: FC<Props> = ({
   pattern = "^\d+$",
   type = "number",
   options,
+  onChangeValue,
   ...props
 }) => {
   const k = useMemo(() => `item-${kName++}`, []);
@@ -38,10 +40,12 @@ export const InputCurrency: FC<Props> = ({
   const onChangeWrap = (e: ChangeEvent<HTMLInputElement>) => {
     onChange?.(e);
     setValue(e.target.value);
+    onChangeValue?.(Number(e.target.value));
   }
 
   const changeValue = (nextValue: number) => {
     setValue(nextValue.toString());
+    onChangeValue?.(nextValue);
     if (inputRef.current) {
       inputRef.current.value = nextValue.toString();
     }

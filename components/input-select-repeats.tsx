@@ -1,14 +1,10 @@
-import React, { FC, useEffect, useMemo, useState } from "react"
+import React, { FC, useMemo, useState } from "react"
 import { Map } from "immutable"
-import { dateFormat, dateFormatDate } from "./date-format"
-import { Code } from "./code"
+import { dateFormatDate } from "./date-format"
 import { nextTick } from 'process'
-import { Period, PeriodDayOfMonth } from "./lib/period"
-import classNames from "classnames"
-import * as AlertDialog from '@radix-ui/react-alert-dialog'
+import { Period } from "./lib/period"
 import { optionsDayOfMonth } from "./statics/options-day-of-month"
-import { Button } from "./button"
-import { InputCurrency } from "./input"
+import { PanelPay } from "./panel-pay"
 
 const n = (val: any) => val === "" ? null : val
 const nNumber = (val: any) => val === "" ? null : Number(val)
@@ -17,14 +13,7 @@ const d = new Date()
 
 d.setMonth(d.getMonth() - 4)
 
-
 export const InputSelectRepeats: FC<{ defaultValue?: any, onChange?: (v: any) => void }> = ({ defaultValue, onChange }) => {
-  const numberformat = new Intl.NumberFormat('es-CL', {
-    style: 'currency',
-    currency: 'CLP',
-    currencyDisplay: 'name',
-  })
-
   const [value, setValue] = useState(() => Map(defaultValue ?? {}))
   const type = useMemo(() => value.getIn(["type"]), [value])
   const period = useMemo(() => Period.from(value.toJS()), [value]);
@@ -52,54 +41,13 @@ export const InputSelectRepeats: FC<{ defaultValue?: any, onChange?: (v: any) =>
       </div>
 
       {period && <>
-        <div>Siguiente pago el {period && dateFormatDate.format(period.nextDate())}</div>
+        <div>Siguiente pago el {period && dateFormatDate.format(period.nextDate().toDate())}</div>
 
         <div>
           <div className="flex flex-wrap">
-            {Array.from(period?.range(d, 7) ?? []).map((e, i) => <div>
-              <AlertDialog.Root>
-                <AlertDialog.Trigger asChild>
-                  <Button>{dateFormatDate.format(e)}</Button>
-                </AlertDialog.Trigger>
-                <AlertDialog.Content className="bg-gray-700 bg-opacity-30 w-screen h-screen flex items-center justify-center ">
-                  <div style={{ minWidth: 500 }} className="bg-white p-4 space-y-4 shadow-md border border-gray-400">
-                    <AlertDialog.Title>
-                      <div>Fecha de pago</div>
-                      <h2 className="text-xl">
-                        Fecha {dateFormatDate.format(e)}
-                      </h2>
-                    </AlertDialog.Title>
-
-                    <AlertDialog.Description>
-
-                      <div>
-                        <label htmlFor={`vl-pay-${i}`}>Valor</label>
-                        <InputCurrency
-                          options={[
-                            { value: 380_000 },
-                            { value: 1_000 },
-                            { value: 30_000 },
-                            { value: 90_000 },
-                          ]}
-                        />
-                      </div>
-
-                    </AlertDialog.Description>
-
-                    <div className="flex justify-end space-x-2">
-                      <AlertDialog.Cancel asChild>
-                        <Button typeStyle="secondary">Cancelar</Button>
-                      </AlertDialog.Cancel>
-                      <AlertDialog.Action asChild>
-                        <Button typeStyle="primary">Marcar como pagado</Button>
-                      </AlertDialog.Action>
-                    </div>
-                  </div>
-                </AlertDialog.Content>
-              </AlertDialog.Root>
-
-              {/* <Code key={i} src={e && dateFormatDate.format(e)} /> */}
-            </div>)}
+            {Array.from(period?.range(d, 7) ?? []).map((e, i) =>
+              <PanelPay key={i} i={i} date={e.toDate()} onChange={set('history', e.toKey())} defaultValues={defaultValue?.history?.[e.toKey()]} />
+            )}
           </div>
         </div>
       </>

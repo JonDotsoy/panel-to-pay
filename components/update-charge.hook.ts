@@ -25,7 +25,7 @@ export const useUpdateCharge = (docElm: DocumentSnapshot) => {
 
     setLoading(true);
 
-    updateDoc(doc(db, 'docs', user.uid, 'changes', docElm.id), {
+    updateDoc(doc(db, 'docs', user.uid, 'charges', docElm.id), {
       ...data,
       updatedAt: new Date(),
     })

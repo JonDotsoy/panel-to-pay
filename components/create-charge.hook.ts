@@ -14,7 +14,7 @@ export const useCreateCharge = () => {
 
     setLoading(true);
 
-    addDoc(collection(db, 'docs', user.uid, 'changes'), {
+    addDoc(collection(db, 'docs', user.uid, 'charges'), {
       name: '',
       createdAt: new Date(),
     })

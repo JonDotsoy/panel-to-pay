@@ -14,7 +14,7 @@ const hook = () => {
       setLoading(true);
       getDocs(
         query(
-          collection(db, `docs`, user.uid, 'changes'),
+          collection(db, `docs`, user.uid, 'charges'),
           orderBy('createdAt', 'desc'),
         ),
       )

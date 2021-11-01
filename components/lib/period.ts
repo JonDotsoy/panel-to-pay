@@ -31,6 +31,42 @@ function setDateInMonth(month: Date, numberDate: number) {
   return date;
 }
 
+class PeriodMonthlyPoint {
+  private keyParts: number[];
+  private str: string;
+  private fullKeyParts: number[];
+  private strFull: string;
+
+  constructor(private date: Date) {
+    this.keyParts = [
+      date.getFullYear(),
+      date.getMonth(),
+      // date.getDate()
+    ]
+
+    this.fullKeyParts = [
+      date.getFullYear(),
+      date.getMonth(),
+      // date.getDate()
+    ]
+
+    this.str = ['period-point', 'monthly', ...this.keyParts].join(':')
+    this.strFull = ['period-point', 'monthly', ...this.fullKeyParts].join(':')
+  }
+
+  toDate() {
+    return this.date;
+  }
+
+  toKey() {
+    return this.str;
+  }
+
+
+  toJSON() {
+    return this.toKey();
+  }
+}
 
 export class Period {
   private constructor(private type: typeof periodTypes[keyof typeof periodTypes], private opts: { dayOfMonth: number; }) { }
@@ -43,8 +79,10 @@ export class Period {
       //   d.setMonth(d.getMonth() + 1);
       //   d = setDateInMonth(d, this.opts.dayOfMonth);
       // }
-      return d;
+      return new PeriodMonthlyPoint(d);
     }
+
+    throw new Error(`Not implemented ${this.type}`);
   }
 
   * range(from: Date = new Date(), len = 10) {

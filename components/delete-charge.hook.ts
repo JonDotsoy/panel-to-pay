@@ -17,7 +17,7 @@ export const useDeleteCharge = (docElm: DocumentSnapshot) => {
 
     setLoading(true);
 
-    deleteDoc(doc(db, 'docs', user.uid, 'changes', docElm.id))
+    deleteDoc(doc(db, 'docs', user.uid, 'charges', docElm.id))
       .then(() => {
         refresh();
         setDeleted(true);
