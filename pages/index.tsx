@@ -2,10 +2,8 @@ import React, { FC, useEffect } from "react";
 import Link from 'next/link'
 import { useAuth } from "../components/auth.hook";
 import { ViewGridAddSolid } from "../components/icons/solid/view-grid-add";
-import classNames from "classnames";
 import { ViewGridSolid } from "../components/icons/solid/view-grid";
 import { useCharges } from "../components/charges.hook";
-import { inspect } from 'util'
 import { useCreateCharge } from "../components/create-charge.hook";
 import { ChangeCard } from "../components/change-card";
 import { SpinIcon } from "../components/spin-icon";
@@ -18,6 +16,7 @@ export const IndexPage: FC = () => {
 
   useEffect(() => {
     pull();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <>

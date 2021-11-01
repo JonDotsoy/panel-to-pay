@@ -3,7 +3,7 @@ import { useAuth } from "./auth.hook";
 import { getDocs, collection, DocumentData, DocumentSnapshot, query, orderBy } from 'firebase/firestore'
 import { db } from "./firebase-app";
 
-const hook = () => {
+const Hook = () => {
   const [countLoaded, setCountLoaded] = useState(0);
   const [loading, setLoading] = useState(false);
   const [docs, setDocs] = useState<DocumentSnapshot<DocumentData>[]>([]);
@@ -39,9 +39,9 @@ const hook = () => {
   }
 }
 
-const changesContext = createContext<ReturnType<typeof hook>>({ loading: false, docs: [], refresh: () => { }, pull: () => { } });
+const changesContext = createContext<ReturnType<typeof Hook>>({ loading: false, docs: [], refresh: () => { }, pull: () => { } });
 
-export const ChangesProvider: FC = ({ children }) => createElement(changesContext.Provider, { value: hook() }, children);
+export const ChangesProvider: FC = ({ children }) => createElement(changesContext.Provider, { value: Hook() }, children);
 
 export const useCharges = () => {
   return useContext(changesContext);

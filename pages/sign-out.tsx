@@ -9,6 +9,7 @@ const SignOutPage: FC = () => {
     auth.signOut().then(() => {
       push("/");
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <></>;

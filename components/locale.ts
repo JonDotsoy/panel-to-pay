@@ -13,7 +13,7 @@ export const LocaleProvider: FC = ({ children }) => {
     locale: 'es-CL',
   }
 
-  return createElement(localeContext.Provider, { value: InitialLocale, children });
+  return createElement(localeContext.Provider, { value: InitialLocale }, children);
 }
 
 export const useLocale = () => useContext(localeContext).locale;

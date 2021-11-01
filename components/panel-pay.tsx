@@ -4,20 +4,22 @@ import { dateFormatDate } from "./date-format"
 import { Button } from "./button";
 import { InputCurrency } from "./input-currency";
 import { Code } from "./code";
+import { InputDate } from "./input-date";
+import { Charge } from "./charge.hook";
 
-interface PayObj {
-  currency?: number;
-}
+type A<T> = T extends { [k: string]: infer U } ? U : never
+type H = Charge['period']['history']
+type T = A<H>
 
 interface Props {
   i: number;
   date: Date;
-  onChange?: (values: PayObj | null) => void;
-  defaultValues?: PayObj;
+  onChange?: (values: T | null) => void;
+  defaultValues?: T;
 }
 
 export const PanelPay: FC<Props> = ({ i, date: e, onChange, defaultValues }) => {
-  const [values, setValues] = React.useState<PayObj | undefined>(defaultValues)
+  const [values, setValues] = React.useState<T | undefined>(defaultValues);
 
   const onChangeCurrencyValue = (values: number) => {
     setValues(v => {
@@ -30,20 +32,32 @@ export const PanelPay: FC<Props> = ({ i, date: e, onChange, defaultValues }) => 
 
   }
 
+  const onChangeDateValue = (values: Date) => {
+    setValues(v => {
+      const r = { ...v, date: values }
+
+      onChange?.(r)
+
+      return r
+    })
+  }
+
   return (
     <div>
       <AlertDialog.Root>
         <AlertDialog.Trigger asChild>
           <Button
             typeStyle={defaultValues ? "secondary" : 'default'}
-          >{dateFormatDate.format(e)}</Button>
+          >
+            {defaultValues?.date ? dateFormatDate.format(defaultValues.date) : dateFormatDate.format(e)}
+          </Button>
         </AlertDialog.Trigger>
         <AlertDialog.Content className="bg-gray-700 bg-opacity-30 w-screen h-screen flex items-center justify-center ">
           <div style={{ minWidth: 500 }} className="bg-white p-4 space-y-4 shadow-md border border-gray-400">
             <AlertDialog.Title>
               <div>Fecha de pago</div>
               <h2 className="text-xl">
-                {dateFormatDate.format(e)}
+                <InputDate defaultValue={defaultValues?.date ?? e} onChange={onChangeDateValue} />
               </h2>
             </AlertDialog.Title>
 
@@ -80,7 +94,7 @@ export const PanelPay: FC<Props> = ({ i, date: e, onChange, defaultValues }) => 
 
       {/* <Code key={i} src={e && dateFormatDate.format(e)} /> */}
 
-      {/* <Code src={defaultValues}></Code> */}
+      <Code src={defaultValues}></Code>
     </div>
   )
 }

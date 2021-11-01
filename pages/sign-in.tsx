@@ -1,4 +1,4 @@
-import { getRedirectResult, GoogleAuthProvider, signInWithPopup, signInWithRedirect } from "firebase/auth";
+import { getRedirectResult, GoogleAuthProvider, signInWithRedirect } from "firebase/auth";
 import { useRouter } from "next/dist/client/router";
 import { FC, useEffect } from "react";
 import { useAuth } from "../components/auth.hook";
@@ -20,6 +20,7 @@ const SignInPage: FC = () => {
           }
         })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   return (

@@ -5,6 +5,8 @@ import { nextTick } from 'process'
 import { Period } from "./lib/period"
 import { optionsDayOfMonth } from "./statics/options-day-of-month"
 import { PanelPay } from "./panel-pay"
+import { Charge } from "./charge.hook"
+import { Code } from "./code"
 
 const n = (val: any) => val === "" ? null : val
 const nNumber = (val: any) => val === "" ? null : Number(val)
@@ -13,9 +15,14 @@ const d = new Date()
 
 d.setMonth(d.getMonth() - 4)
 
-export const InputSelectRepeats: FC<{ defaultValue?: any, onChange?: (v: any) => void }> = ({ defaultValue, onChange }) => {
+type Props = {
+  defaultValue?: Charge['period']
+  onChange?: (v: Charge['period']) => void
+}
+
+export const InputSelectRepeats: FC<Props> = ({ defaultValue, onChange }) => {
   const [value, setValue] = useState(() => Map(defaultValue ?? {}))
-  const type = useMemo(() => value.getIn(["type"]), [value])
+  const type = useMemo(() => value.getIn(["type"]) as Charge['period']['type'], [value])
   const period = useMemo(() => Period.from(value.toJS()), [value]);
 
   const set = (...path: string[]) => (value: any) => setValue(v => {
@@ -27,13 +34,13 @@ export const InputSelectRepeats: FC<{ defaultValue?: any, onChange?: (v: any) =>
   return (
     <>
       <div>
-        <select className="p-2 border border-gray-200" onChange={v => set('type')(n(v.target.value))} defaultValue={defaultValue.type}>
+        <select className="p-2 border border-gray-200" onChange={v => set('type')(n(v.target.value))} defaultValue={defaultValue?.type}>
           <option value="">Select</option>/
           <option value="monthly">Todos los meses</option>
         </select>
         {
           type === 'monthly' &&
-          <select className="p-2 border border-gray-200" onChange={v => set('day-of-month')(nNumber(v.target.value))} defaultValue={defaultValue['day-of-month']}>
+          <select className="p-2 border border-gray-200" onChange={v => set('day-of-month')(nNumber(v.target.value))} defaultValue={defaultValue?.['day-of-month']}>
             <option value="">Select</option>
             {optionsDayOfMonth.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
           </select>
@@ -58,7 +65,7 @@ export const InputSelectRepeats: FC<{ defaultValue?: any, onChange?: (v: any) =>
         a: period?.nextDate()?.toJSON(),
       }}></Code> */}
       {/* <Code src={period}></Code> */}
-      {/* <Code src={value.toJSON()}></Code> */}
+      {/* <Code src={defaultValue}></Code> */}
     </>
   )
 }

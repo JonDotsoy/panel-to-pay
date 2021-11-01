@@ -21,7 +21,6 @@ export const InputCurrency: FC<Props> = ({
   helpStringFormat = true,
   defaultValue,
   onChange,
-  locale = useLocale(),
   currency = 'CLP',
   pattern = "^\d+$",
   type = "number",
@@ -29,6 +28,7 @@ export const InputCurrency: FC<Props> = ({
   onChangeValue,
   ...props
 }) => {
+  const locale = useLocale();
   const k = useMemo(() => `item-${kName++}`, []);
   const inputRef = useRef<HTMLInputElement>(null);
 

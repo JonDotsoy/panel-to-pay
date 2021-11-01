@@ -1,7 +1,7 @@
 import React, { FC, useMemo } from 'react'
 import { inspect } from 'util'
 import { DocumentSnapshot } from 'firebase/firestore'
-import { useChange } from './change.hook'
+import { useCharge } from './charge.hook'
 import { useValuesChanges } from './values-changes'
 import { ButtonDeleteCharge } from './button-delete-charge'
 import classNames from 'classnames'
@@ -15,7 +15,7 @@ import { Code } from './code'
 import { Button } from './button'
 
 export const ChangeCard: FC<{ doc: DocumentSnapshot }> = ({ doc }) => {
-  const data = useChange(doc);
+  const data = useCharge(doc);
   const { changed, set, values } = useValuesChanges(data, ['name', 'period'], [doc]);
   const { loading: loadingUpdateCharge, updated, updateCharge } = useUpdateCharge(doc);
 

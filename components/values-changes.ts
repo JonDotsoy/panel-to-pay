@@ -1,7 +1,8 @@
-import { fromJS, Map, List } from 'immutable'
-import { DependencyList, useEffect, useMemo, useState } from 'react'
+import { Map } from 'immutable'
+import { DependencyList, useMemo, useState } from 'react'
 
 export const useValuesChanges = <O>(initialValues: O, fields: (O extends object ? keyof O : never)[], deps: DependencyList) => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const initialValue = useMemo(() => Map(fields.reduce((a, field) => ({ ...a, [field]: initialValues[field] }), {})), deps);
 
   const [values, setValues] = useState(initialValue);
