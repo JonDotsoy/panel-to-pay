@@ -27,7 +27,7 @@ export const PanelPay: FC<Props> = ({ i, date: e, onChange, defaultValues }) => 
 
       return r
     })
-    
+
   }
 
   return (
@@ -43,7 +43,7 @@ export const PanelPay: FC<Props> = ({ i, date: e, onChange, defaultValues }) => 
             <AlertDialog.Title>
               <div>Fecha de pago</div>
               <h2 className="text-xl">
-                Fecha {dateFormatDate.format(e)}
+                {dateFormatDate.format(e)}
               </h2>
             </AlertDialog.Title>
 
@@ -52,6 +52,7 @@ export const PanelPay: FC<Props> = ({ i, date: e, onChange, defaultValues }) => 
               <div>
                 <label htmlFor={`vl-pay-${i}`}>Valor</label>
                 <InputCurrency
+                  id={`vl-pay-${i}`}
                   onChangeValue={onChangeCurrencyValue}
                   defaultValue={defaultValues?.currency}
                   options={[
@@ -78,7 +79,7 @@ export const PanelPay: FC<Props> = ({ i, date: e, onChange, defaultValues }) => 
       </AlertDialog.Root>
 
       {/* <Code key={i} src={e && dateFormatDate.format(e)} /> */}
-      
+
       {/* <Code src={defaultValues}></Code> */}
     </div>
   )

@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "next",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "export": "next build && next export"
   },
   "author": "",
   "license": "ISC",
