@@ -1,6 +1,12 @@
-import { periodTypes } from "./constant/period-types.constant";
+import { periodTypes } from "../constant/period-types.constant";
 import { Temporal } from '@js-temporal/polyfill'
 
+export interface PeriodDayOfMonth {
+  type: 'monthly'
+  'day-of-month': number
+}
+
+export type PeriodTypes = PeriodDayOfMonth
 
 function menusOrEqualDate(date1: Date, date2: Date) {
   const dayOnMilliseconds = 1000 * 60 * 60 * 24;
@@ -51,7 +57,7 @@ export class Period {
     }
   }
 
-  static from(val: any) {
+  private static fromNoTyped(val: any) {
     if (typeof val !== 'object' || val === null)
       return null;
     if (val.type === undefined)
@@ -65,6 +71,9 @@ export class Period {
     }
 
     return null;
-    // return new Period(val.type);
+  }
+
+  static from<T>(value: T): T extends PeriodTypes ? Period : Period | null {
+    return this.fromNoTyped(value) as any;
   }
 }

@@ -12,6 +12,7 @@ import { CheckSolid } from './icons/solid/check'
 import { InputSelectRepeats } from './input-select-repeats'
 import { dateFormat } from './date-format'
 import { Code } from './code'
+import { Button } from './button'
 
 export const ChangeCard: FC<{ doc: DocumentSnapshot }> = ({ doc }) => {
   const data = useChange(doc);
@@ -55,17 +56,11 @@ export const ChangeCard: FC<{ doc: DocumentSnapshot }> = ({ doc }) => {
         {data.updatedAt && <> y actualizado por ultima vez el {dateFormat.format(data.updatedAt)}</>}
       </div>
       <div className="flex space-x-2">
-        <button
+        <Button
           className={classNames(
-            "transition-all flex border justify-center items-center px-4 py-2",
-            {
-              "bg-gray-50 text-gray-200 border-gray-100": !changed && !loadingUpdateCharge && !updated,
-              "border-green-400 text-green-500": changed && !loadingUpdateCharge && !updated,
-              "hover:border-green-400 hover:shadow-md hover:bg-green-400 hover:text-white": changed && !loadingUpdateCharge && !updated,
-              "border-green-400 bg-green-400 text-white cursor-default": loadingUpdateCharge || updated,
-              // "border-green-400 bg-green-400 text-white cursor-default": updated,
-            },
+            "transition-all flex justify-center items-center",
           )}
+          typeStyle={!changed ? 'disabled' : 'primary'}
           disabled={!changed}
         >
           {
@@ -79,7 +74,7 @@ export const ChangeCard: FC<{ doc: DocumentSnapshot }> = ({ doc }) => {
                 Guardar Cambios
               </>
           }
-        </button>
+        </Button>
         <ButtonDeleteCharge doc={doc} />
       </div>
       {/* <Code src={{ changed, values:values.toJS() }}></Code> */}

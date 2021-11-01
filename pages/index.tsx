@@ -9,6 +9,7 @@ import { inspect } from 'util'
 import { useCreateCharge } from "../components/create-charge.hook";
 import { ChangeCard } from "../components/change-card";
 import { SpinIcon } from "../components/spin-icon";
+import { Button } from "../components/button";
 
 export const IndexPage: FC = () => {
   const { user } = useAuth();
@@ -41,21 +42,16 @@ export const IndexPage: FC = () => {
         user &&
         <>
           <div className="pb-10">
-            <button
-              className={classNames(
-                "flex border px-4 py-2 justify-center items-center transition-all",
-                {
-                  "border-blue-500 hover:bg-blue-500 hover:text-white text-blue-500 hover:shadow-md": !loadingCreateChange,
-                  "bg-gray-300 text-white border-gray-50 cursor-default": loadingCreateChange,
-                },
-              )}
+            <Button
+              typeStyle="secondary"
+              className="flex justify-center items-center"
               disabled={loadingCreateChange}
               onClick={createCharge}
             >
               <span>Agregar Cobro</span>
               {loadingCreateChange && <ViewGridSolid className="ml-2 animate-spin" size="6" />}
               {!loadingCreateChange && <ViewGridAddSolid className="ml-2" size="6" />}
-            </button>
+            </Button>
           </div>
 
           <div>
