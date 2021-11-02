@@ -64,7 +64,7 @@ export const PanelPay: FC<Props> = ({ date: e, historyKey, suggestionOptions }) 
             {dateFormatDate.format(date)}
           </Button>
         </Dialog.Trigger>
-        <Dialog.Content className="bg-white fixed p-4 border border-gray-400 shadow-md transform top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <Dialog.Content className="bg-white fixed p-4 border border-gray-400 shadow-md transform top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-screen md:w-max">
           <div>
             <Dialog.Title>
               <div>Fecha de pago</div>
