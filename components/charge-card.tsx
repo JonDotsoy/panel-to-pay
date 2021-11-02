@@ -31,6 +31,13 @@ const ChargeCardContent: FC<ChargeCardProps> = ({ }) => {
 
   const updatedAt = values.getUpdatedAt();
 
+  const getSuggestionOptions = () => {
+    return Array.from(new Set(Object.values(values.getMapHistory()).map(history => history?.currency).filter((currency): currency is Exclude<typeof currency, undefined> => !!currency)))
+      .map(c => ({ value: c }))
+  }
+
+  const suggestionOptions = useMemo(getSuggestionOptions, [chargeMap]);
+
   return <div className="border p-4">
     <form
       onSubmit={e => {
@@ -77,8 +84,9 @@ const ChargeCardContent: FC<ChargeCardProps> = ({ }) => {
                   key={p.toKey()}
                   historyKey={p.toKey()}
                   date={p.toDate()}
-                  // onChange={set('history', e.toKey())}
-                  // defaultValues={defaultValue?.history?.[e.toKey()]}
+                  suggestionOptions={suggestionOptions}
+                // onChange={set('history', e.toKey())}
+                // defaultValues={defaultValue?.history?.[e.toKey()]}
                 />
               )}
             </div>
@@ -112,11 +120,11 @@ const ChargeCardContent: FC<ChargeCardProps> = ({ }) => {
         </Button>
         <ButtonDeleteCharge doc={doc} />
       </div>
-      {/* <Code src={{
+      <Code src={{
         equal: initial.equals(chargeMap),
         initial: initial.toJS(),
         chargeMap: chargeMap.toJS()
-      }}></Code> */}
+      }}></Code>
     </form>
   </div>
 }

@@ -15,10 +15,11 @@ type T = Exclude<A<H>, undefined>
 interface Props {
   historyKey: string
   date: Date;
+  suggestionOptions?: { value: number }[]
   onChange?: (values: T | null) => void;
 }
 
-export const PanelPay: FC<Props> = ({ date: e, historyKey }) => {
+export const PanelPay: FC<Props> = ({ date: e, historyKey, suggestionOptions }) => {
   const { values } = useChargeMap();
   const history = toHistory(values.getHistory(historyKey));
   const [date, setDate] = useState(history?.date ?? e);
@@ -27,6 +28,7 @@ export const PanelPay: FC<Props> = ({ date: e, historyKey }) => {
   const tickChange = (partialHistory?: Partial<History>) => {
     const history = toHistory({
       date,
+      currency,
       ...partialHistory,
     });
     if (history) {
@@ -78,12 +80,7 @@ export const PanelPay: FC<Props> = ({ date: e, historyKey }) => {
                 <InputCurrency
                   onChangeValue={onChangeCurrency}
                   defaultValue={currency}
-                  options={[
-                    { value: 380_000 },
-                    { value: 1_000 },
-                    { value: 30_000 },
-                    { value: 90_000 },
-                  ]}
+                  options={suggestionOptions}
                 />
               </div>
 

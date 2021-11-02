@@ -58,7 +58,11 @@ export type History = Exclude<ReturnType<typeof toHistory>, undefined>
 const toMapHistory = (data: any) => {
   if (!isObj(data)) return {};
 
-  return Object.fromEntries(Object.entries(data).map(([key, value]) => ([key, toHistory(value)])))
+  return Object.fromEntries(
+    Object
+      .entries(data)
+      .map(([key, value]) => [key, toHistory(value)])
+  )
 }
 
 export type Charge = Exclude<ReturnType<typeof toChange>, null>
@@ -77,7 +81,7 @@ const Hook = (doc: DocumentSnapshot) => {
 
   const getIn = (...paths: string[]) => chargeMapValue?.getIn(paths);
   const setIn = (...paths: string[]) => (value: any) =>
-    setChargeMapValue(chargeMapValue => chargeMapValue!.setIn(paths, value));
+    setChargeMapValue(chargeMapValue => chargeMapValue?.setIn(paths, value) ?? null);
 
   const removeIn = (...paths: string[]) => () =>
     setChargeMapValue(chargeMapValue => chargeMapValue!.removeIn(paths));
@@ -127,6 +131,7 @@ export const useChargeMap = () => {
         getDayOfMonth: () => getIn('period', 'day-of-month') as Charge['period']['day-of-month'],
         setDayOfMonth: (value: Charge['period']['day-of-month']) => setIn('period', 'day-of-month')(value),
       },
+      getMapHistory: () => getIn('history') as Charge['history'],
       getHistory: (historyKey: string) => getIn('history', historyKey) as History | undefined,
       setHistory: (historyKey: string, value: History) => {
         setIn('history', historyKey, 'date')(value.date)
