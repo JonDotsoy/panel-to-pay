@@ -1,74 +1,83 @@
-import React, { FC } from "react";
-import * as AlertDialog from '@radix-ui/react-alert-dialog'
-import { dateFormatDate } from "./date-format"
+import React, { FC, useCallback, useEffect, useState } from "react";
+import * as Dialog from '@radix-ui/react-dialog'
+import { dateFormatDate } from "./lib/date-format"
 import { Button } from "./button";
 import { InputCurrency } from "./input-currency";
 import { Code } from "./code";
 import { InputDate } from "./input-date";
-import { Charge } from "./charge.hook";
+import { nextTick } from 'process'
+import { Charge, useChargeMap, History, toHistory } from "./charge.hook";
 
 type A<T> = T extends { [k: string]: infer U } ? U : never
-type H = Charge['period']['history']
-type T = A<H>
+type H = Charge['history']
+type T = Exclude<A<H>, undefined>
 
 interface Props {
-  i: number;
+  historyKey: string
   date: Date;
   onChange?: (values: T | null) => void;
-  defaultValues?: T;
 }
 
-export const PanelPay: FC<Props> = ({ i, date: e, onChange, defaultValues }) => {
-  const [values, setValues] = React.useState<T | undefined>(defaultValues);
+export const PanelPay: FC<Props> = ({ date: e, historyKey }) => {
+  const { values } = useChargeMap();
+  const history = toHistory(values.getHistory(historyKey));
+  const [date, setDate] = useState(history?.date ?? e);
+  const [currency, setCurrency] = useState(history?.currency ?? 0);
 
-  const onChangeCurrencyValue = (values: number) => {
-    setValues(v => {
-      const r = { ...v, currency: values }
-
-      onChange?.(r)
-
-      return r
-    })
-
+  const tickChange = (partialHistory?: Partial<History>) => {
+    const history = toHistory({
+      date,
+      ...partialHistory,
+    });
+    if (history) {
+      values.setHistory(historyKey, history);
+    }
   }
 
-  const onChangeDateValue = (values: Date) => {
-    setValues(v => {
-      const r = { ...v, date: values }
+  const onChangeDate = (value: Date) => {
+    setDate(value);
+    tickChange({ date: value });
+  }
 
-      onChange?.(r)
+  const onChangeCurrency = (value: number) => {
+    setCurrency(value);
+    tickChange({ currency: value });
+  }
 
-      return r
-    })
+  const onDelete = () => {
+    setDate(e);
+    setCurrency(0);
+    values.removeHistory(historyKey);
   }
 
   return (
     <div>
-      <AlertDialog.Root>
-        <AlertDialog.Trigger asChild>
+      <Dialog.Root>
+        <Dialog.Overlay className="bg-gray-800 bg-opacity-30 fixed inset-0"></Dialog.Overlay>
+
+        <Dialog.Trigger asChild>
           <Button
-            typeStyle={defaultValues ? "secondary" : 'default'}
+            typeStyle={history ? "secondary" : 'default'}
           >
-            {defaultValues?.date ? dateFormatDate.format(defaultValues.date) : dateFormatDate.format(e)}
+            {dateFormatDate.format(date)}
           </Button>
-        </AlertDialog.Trigger>
-        <AlertDialog.Content className="bg-gray-700 bg-opacity-30 w-screen h-screen flex items-center justify-center ">
-          <div style={{ minWidth: 500 }} className="bg-white p-4 space-y-4 shadow-md border border-gray-400">
-            <AlertDialog.Title>
+        </Dialog.Trigger>
+        <Dialog.Content className="bg-white fixed p-4 border border-gray-400 shadow-md transform top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+          <div>
+            <Dialog.Title>
               <div>Fecha de pago</div>
               <h2 className="text-xl">
-                <InputDate defaultValue={defaultValues?.date ?? e} onChange={onChangeDateValue} />
+                <InputDate defaultValue={date} onChange={onChangeDate} />
               </h2>
-            </AlertDialog.Title>
+            </Dialog.Title>
 
-            <AlertDialog.Description>
+            <Dialog.Description>
 
               <div>
-                <label htmlFor={`vl-pay-${i}`}>Valor</label>
+                <label>Valor</label>
                 <InputCurrency
-                  id={`vl-pay-${i}`}
-                  onChangeValue={onChangeCurrencyValue}
-                  defaultValue={defaultValues?.currency}
+                  onChangeValue={onChangeCurrency}
+                  defaultValue={currency}
                   options={[
                     { value: 380_000 },
                     { value: 1_000 },
@@ -78,23 +87,26 @@ export const PanelPay: FC<Props> = ({ i, date: e, onChange, defaultValues }) => 
                 />
               </div>
 
-            </AlertDialog.Description>
+            </Dialog.Description>
 
             <div className="flex justify-end space-x-2">
-              <AlertDialog.Cancel asChild>
-                <Button typeStyle="secondary">Cancelar</Button>
-              </AlertDialog.Cancel>
-              <AlertDialog.Action asChild>
+              <Dialog.Close asChild>
+                <Button typeStyle="danger" onClick={onDelete}>Borrar</Button>
+              </Dialog.Close>
+              <Dialog.Close asChild>
+                <Button typeStyle="secondary">Cerrar</Button>
+              </Dialog.Close>
+              {/* <Dialog.Close asChild>
                 <Button typeStyle="primary">Marcar como pagado</Button>
-              </AlertDialog.Action>
+              </Dialog.Close> */}
             </div>
           </div>
-        </AlertDialog.Content>
-      </AlertDialog.Root>
+        </Dialog.Content>
+      </Dialog.Root>
 
       {/* <Code key={i} src={e && dateFormatDate.format(e)} /> */}
 
-      <Code src={defaultValues}></Code>
+      {/* <Code src={history}></Code> */}
     </div>
   )
 }

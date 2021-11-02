@@ -1,4 +1,4 @@
-import { createContext, createElement, FC, useContext, useEffect, useState } from "react"
+import { createContext, createElement, FC, useCallback, useContext, useEffect, useMemo, useState } from "react"
 import { useAuth } from "./auth.hook";
 import { getDocs, collection, DocumentData, DocumentSnapshot, query, orderBy } from 'firebase/firestore'
 import { db } from "./firebase-app";
@@ -27,9 +27,9 @@ const Hook = () => {
     }
   }, [user, countLoaded]);
 
-  const refresh = () => {
+  const refresh = useCallback(() => {
     setCountLoaded(countLoaded + 1);
-  }
+  }, [countLoaded]);
 
   return {
     loading,
@@ -39,10 +39,19 @@ const Hook = () => {
   }
 }
 
-const changesContext = createContext<ReturnType<typeof Hook>>({ loading: false, docs: [], refresh: () => { }, pull: () => { } });
+type Charges = ReturnType<typeof Hook>;
+
+const changesContext = createContext<Charges | null>(null);
 
 export const ChangesProvider: FC = ({ children }) => createElement(changesContext.Provider, { value: Hook() }, children);
 
-export const useCharges = () => {
-  return useContext(changesContext);
-}
+export const useCharges = () => useContext(changesContext)!;
+
+export const useInitializePullCharges = () => {
+  const charges = useCharges()
+
+  useEffect(() => {
+    charges.pull();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+};

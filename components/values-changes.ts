@@ -1,6 +1,9 @@
 import { Map } from 'immutable'
 import { DependencyList, useMemo, useState } from 'react'
 
+/**
+ * @deprecated
+ */
 export const useValuesChanges = <O>(initialValues: O, fields: (O extends object ? keyof O : never)[], deps: DependencyList) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const initialValue = useMemo(() => Map(fields.reduce((a, field) => ({ ...a, [field]: initialValues[field] }), {})), deps);

@@ -1,7 +1,7 @@
 import classNames from "classnames"
 import React, { FC, useState } from "react"
 import { Button } from "./button"
-import { dateFormatDate } from "./date-format"
+import { dateFormatDate } from "./lib/date-format"
 import { PencilSolid } from "./icons/solid/pencil"
 import { Temporal } from '@js-temporal/polyfill'
 

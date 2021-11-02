@@ -3,6 +3,8 @@ import { inspect } from 'util'
 
 export const Code: FC<{ src: any }> = ({ src }) => {
   return (
-    <pre><code>{inspect(src, { depth: Infinity })}</code></pre>
+    <pre
+      className="p-2 bg-gray-100 border border-gray-300"
+    ><code>{inspect(src, { depth: Infinity, maxArrayLength: Infinity })}</code></pre>
   )
 }

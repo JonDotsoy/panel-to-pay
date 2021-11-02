@@ -1,23 +1,13 @@
 import React, { FC, useEffect } from "react";
 import Link from 'next/link'
 import { useAuth } from "../components/auth.hook";
-import { ViewGridAddSolid } from "../components/icons/solid/view-grid-add";
-import { ViewGridSolid } from "../components/icons/solid/view-grid";
-import { useCharges } from "../components/charges.hook";
-import { useCreateCharge } from "../components/create-charge.hook";
-import { ChangeCard } from "../components/change-card";
-import { SpinIcon } from "../components/spin-icon";
-import { Button } from "../components/button";
+import { useCharges, useInitializePullCharges } from "../components/charges.hook";
+import { PanelCharges } from "../components/panels/panel-charges";
 
 export const IndexPage: FC = () => {
-  const { user } = useAuth();
-  const { loading, docs, pull } = useCharges();
-  const { loading: loadingCreateChange, createCharge } = useCreateCharge();
+  useInitializePullCharges();
 
-  useEffect(() => {
-    pull();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { user } = useAuth();
 
   return <>
     <div className="container m-auto p-2" style={{ maxWidth: 900 }}>
@@ -37,39 +27,7 @@ export const IndexPage: FC = () => {
             </>
         }
       </div>
-      {
-        user &&
-        <>
-          <div className="pb-10">
-            <Button
-              typeStyle="secondary"
-              className="flex justify-center items-center"
-              disabled={loadingCreateChange}
-              onClick={createCharge}
-            >
-              <span>Agregar Cobro</span>
-              {loadingCreateChange && <ViewGridSolid className="ml-2 animate-spin" size="6" />}
-              {!loadingCreateChange && <ViewGridAddSolid className="ml-2" size="6" />}
-            </Button>
-          </div>
-
-          <div>
-            <h2 className="text-2xl inline-flex justify-start items-end">
-              <span className="inline-flex justify-start items-center">
-                <ViewGridSolid className="mr-2" />
-                Cobros
-              </span>
-              {loading && <span className="inline-flex justify-center items-center ml-4 text-gray-500 text-lg"><SpinIcon spinning className="mr-2" /> Loading...</span>}
-            </h2>
-          </div>
-
-          <div>
-            <div className="space-y-4">
-              {docs.map(doc => <ChangeCard key={doc.id} doc={doc} />)}
-            </div>
-          </div>
-        </>
-      }
+      {user && <PanelCharges user={user} />}
     </div>
   </>
 }
