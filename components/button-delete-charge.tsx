@@ -9,7 +9,6 @@ import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import { Button } from "./button";
 
 export const ButtonDeleteCharge: FC<{ doc: DocumentSnapshot }> = ({ doc }) => {
-  const [confirmation, setConfirmation] = useState(true);
   const { loading: deletingLoading, deleted, deleteCharge } = useDeleteCharge(doc);
 
   return (
@@ -29,8 +28,8 @@ export const ButtonDeleteCharge: FC<{ doc: DocumentSnapshot }> = ({ doc }) => {
             }
           </Button>
         </AlertDialog.Trigger>
-        <AlertDialog.Content className="bg-gray-700 bg-opacity-30 w-screen h-screen flex justify-center items-center">
-          <div className="min-w-md w-auto bg-white p-5 shadow-lg rounded" style={{ minWidth: 500 }}>
+        <AlertDialog.Content className="bg-gray-700 bg-opacity-30 fixed flex justify-center items-center inset-0">
+          <div className="min-w-md w-auto bg-white p-5 shadow-lg rounded">
             <AlertDialog.Title className="">¿Estás seguro?</AlertDialog.Title>
             {/* <AlertDialog.Description>
               Ok
