@@ -62,6 +62,7 @@ const toMapHistory = (data: any) => {
     Object
       .entries(data)
       .map(([key, value]) => [key, toHistory(value)])
+      .filter((e): e is [string, History] => e[1] !== undefined)
   )
 }
 

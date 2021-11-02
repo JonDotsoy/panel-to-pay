@@ -120,11 +120,11 @@ const ChargeCardContent: FC<ChargeCardProps> = ({ }) => {
         </Button>
         <ButtonDeleteCharge doc={doc} />
       </div>
-      <Code src={{
+      {/* <Code src={{
         equal: initial.equals(chargeMap),
         initial: initial.toJS(),
         chargeMap: chargeMap.toJS()
-      }}></Code>
+      }}></Code> */}
     </form>
   </div>
 }
